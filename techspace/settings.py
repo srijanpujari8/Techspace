@@ -16,14 +16,15 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '.vercel.app',
     'techspace-indol.vercel.app',
-    'https://techspaceprogramming.com',
-    'https://www.techspaceprogramming.com',
+    'techspaceprogramming.com',        # ✅ bina https:// ke
+    'www.techspaceprogramming.com',    # ✅ bina https:// ke
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://techspace-indol.vercel.app',
+    'https://techspaceprogramming.com',        # ✅ yahan https:// chahiye (CSRF mein scheme zaroori hai)
+    'https://www.techspaceprogramming.com',    # ✅
 ]
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
