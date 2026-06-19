@@ -1,0 +1,819 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}TechSpace Programming Classes | Kalamboli Kamothe Panvel | Coding for the Future{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1 — HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <span class="floating-code">{}</span>
+  <span class="floating-code">&lt;/&gt;</span>
+  <span class="floating-code">()</span>
+  <span class="floating-code">01</span>
+  <span class="floating-code">;</span>
+  <div class="container">
+    <div class="hero-inner">
+      <!-- Left: Headline + CTAs -->
+      <div class="hero-content fade-in">
+        <div class="hero-badge"><i class="fas fa-award"></i> Reg. No: 85491-Academic Institute &nbsp;|&nbsp; <i class="fas fa-star" style="color:var(--gold)"></i> Google 5★ Rated</div>
+        <h1 class="hero-title">Coding for the <span class="highlight">Future of Business</span></h1>
+        <p class="hero-sub">India's Trusted Coding Platform — Classroom &amp; Online Training in <strong>Kalamboli, Kamothe &amp; Panvel</strong>, Navi Mumbai.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary btn-lg" data-modal-open="brochureModal" id="heroBrochureBtn">
+            <i class="fas fa-file-pdf"></i> Download Brochure
+          </button>
+          <a href="#contact" class="btn btn-white btn-lg" id="heroEnrollBtn">
+            <i class="fas fa-graduation-cap"></i> Enroll Now
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">300+</div><div class="label">Students</div></div>
+          <div class="hero-stat"><div class="num">14</div><div class="label">Placed</div></div>
+          <div class="hero-stat"><div class="num">100%</div><div class="label">Placement</div></div>
+          <div class="hero-stat"><div class="num">3</div><div class="label">Branches</div></div>
+        </div>
+      </div>
+
+      <!-- Right: Lead Capture Form -->
+      <div class="hero-form-card fade-in" style="transition-delay:0.2s">
+        <h3>Start Your Coding Journey</h3>
+        <p>Get a free counselling session. No commitment required.</p>
+        <form method="post" action="/enquire/" id="heroEnquiryForm">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input class="form-control" type="text" name="name" placeholder="Your Full Name" required id="heroName">
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input class="form-control" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required id="heroPhone">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input class="form-control" type="email" name="email" placeholder="Email Address" id="heroEmail">
+          </div>
+          <div class="form-group">
+            <label>Course Interest</label>
+            <select class="form-select" name="course" id="heroCourse">
+              <option value="other">Select a Course</option>
+              <option value="python">Python Programming</option>
+              <option value="fullstack">Full Stack Web Development</option>
+              <option value="data-science">Data Science & Analytics</option>
+              <option value="devops">DevOps Engineering</option>
+              <option value="cloud-computing">Cloud Computing</option>
+              <option value="cyber-security">Cyber Security</option>
+              <option value="dsa">DSA + Competitive Programming</option>
+              <option value="software-development">Software Development</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center" id="heroSubmitBtn">
+            <i class="fas fa-paper-plane"></i> Get Free Counselling
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2 — STATS BAR
+     ═══════════════════════════════════════════════════════════ -->
+<section class="stats-bar" aria-label="Key Statistics">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item fade-in">
+        <div class="stat-number" data-count="300" data-suffix="+">0+</div>
+        <div class="stat-label">Students Trained</div>
+      </div>
+      <div class="stat-item fade-in" style="transition-delay:0.1s">
+        <div class="stat-number" data-count="14">0</div>
+        <div class="stat-label">Students Placed at SP Finance</div>
+      </div>
+      <div class="stat-item fade-in" style="transition-delay:0.2s">
+        <div class="stat-number" data-count="100" data-suffix="%">0%</div>
+        <div class="stat-label">Placement Achieved</div>
+      </div>
+      <div class="stat-item fade-in" style="transition-delay:0.3s">
+        <div class="stat-number" data-count="3">0</div>
+        <div class="stat-label">Branches in Navi Mumbai</div>
+      </div>
+      <div class="stat-item fade-in" style="transition-delay:0.4s">
+        <div class="stat-number" data-count="4" data-suffix="+">0+</div>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+      <div class="stat-item fade-in" style="transition-delay:0.5s">
+        <div class="stat-number" data-count="6">0</div>
+        <div class="stat-label">Months Avg Course Duration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3 — COURSES WE OFFER
+     ═══════════════════════════════════════════════════════════ -->
+<section class="courses-section" id="courses" aria-labelledby="coursesHeading">
+  <div class="container">
+    <h2 class="section-title" id="coursesHeading">Courses We <span>Offer</span></h2>
+    <p class="section-subtitle">From beginner to advanced — structured, project-based programs designed for real-world careers.</p>
+    <div class="title-underline"></div>
+
+    <div class="courses-grid">
+      {% for course in courses %}
+      <div class="course-card {% if course.highlighted %}highlighted{% endif %} fade-in">
+        {% if course.highlighted %}
+        <span class="course-badge cert"><i class="fas fa-certificate"></i> Certificate</span>
+        {% else %}
+        <span class="course-badge">{{ course.duration }}</span>
+        {% endif %}
+        <div class="course-icon"><i class="{{ course.icon }}"></i></div>
+        <h3 class="course-name">{{ course.name }}</h3>
+        <div class="course-duration"><i class="fas fa-clock"></i> {{ course.duration }}</div>
+        <ul class="course-topics">
+          {% for topic in course.topics %}
+          <li>{{ topic }}</li>
+          {% endfor %}
+        </ul>
+        <div class="course-actions">
+          <a href="#contact" class="btn btn-secondary btn-sm">Know More</a>
+          <a href="#contact" class="btn btn-primary btn-sm">Enroll</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4 — WE PROVIDE (USP GRID)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="usp-section" id="provide" aria-labelledby="uspHeading">
+  <div class="container">
+    <h2 class="section-title" id="uspHeading">What We <span>Provide</span></h2>
+    <p class="section-subtitle">A complete ecosystem for your learning and career success — not just classes.</p>
+    <div class="title-underline"></div>
+
+    <div class="usp-grid">
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-certificate"></i></div><div class="usp-text"><h4>Course Completion Certificate</h4><p>Earn a recognised certificate after every course</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-id-badge"></i></div><div class="usp-text"><h4>Internship Certificate</h4><p>Official internship certificate on project completion</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-briefcase"></i></div><div class="usp-text"><h4>Portfolio & Resume Building</h4><p>Professional portfolio & ATS-ready resume guidance</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-code"></i></div><div class="usp-text"><h4>Weekly Coding Practice</h4><p>Regular assignments to sharpen your coding skills</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-user-tie"></i></div><div class="usp-text"><h4>Interview Preparation</h4><p>Technical & HR interview coaching sessions</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-chalkboard-teacher"></i></div><div class="usp-text"><h4>Presentation Round Training</h4><p>Boost confidence for group discussions & demos</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-comments"></i></div><div class="usp-text"><h4>1:1 Doubt Solving Sessions</h4><p>Personal attention from expert mentors</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-project-diagram"></i></div><div class="usp-text"><h4>Project-Based Learning</h4><p>Build real-world projects for your portfolio</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-tasks"></i></div><div class="usp-text"><h4>Mock Interviews</h4><p>Simulate real company interviews with feedback</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-video"></i></div><div class="usp-text"><h4>Live + Recorded Lectures</h4><p>Attend live or watch recordings at your own pace</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-chart-line"></i></div><div class="usp-text"><h4>Student Progress Tracker</h4><p>Monitor your learning journey week by week</p></div></div>
+      <div class="usp-item fade-in"><div class="usp-icon"><i class="fas fa-handshake"></i></div><div class="usp-text"><h4>Placement Support</h4><p>Resume sharing, company referrals & job alerts</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 5 — PLACEMENT SUCCESS
+     ═══════════════════════════════════════════════════════════ -->
+<section class="placement-section" id="placements" aria-labelledby="placementHeading">
+  <div class="container">
+    <h2 class="section-title" id="placementHeading" style="color:var(--white)">Placement <span>Success</span></h2>
+    <p class="section-subtitle" style="color:rgba(255,255,255,0.6)">Our students don't just learn — they get hired.</p>
+    <div class="title-underline"></div>
+
+    <!-- 100% Banner -->
+    <div class="placement-banner fade-in">
+      <div class="glow-badge">🏆 100% Placement Achieved</div>
+      <h2>14 Students Placed at <span>SP Finance</span> as Software Developers</h2>
+      <p>Every student who completed our Full Stack batch in 2025 is now working professionally.</p>
+    </div>
+
+    <!-- Company Strip -->
+    <div class="company-strip fade-in">
+      <h4>Our Hiring Partners</h4>
+      <div class="strip-track">
+        <div class="company-logo-item"><i class="fas fa-building"></i><span>SP Finance</span></div>
+        <div class="company-logo-item"><i class="fas fa-laptop-code"></i><span>Software Developer Roles</span></div>
+        <div class="company-logo-item"><i class="fas fa-users"></i><span>Batch 2025</span></div>
+        <div class="company-logo-item"><i class="fas fa-star"></i><span>100% Placement Rate</span></div>
+        <div class="company-logo-item"><i class="fas fa-plus-circle"></i><span>More Companies Coming Soon</span></div>
+        <!-- Duplicate for seamless loop -->
+        <div class="company-logo-item"><i class="fas fa-building"></i><span>SP Finance</span></div>
+        <div class="company-logo-item"><i class="fas fa-laptop-code"></i><span>Software Developer Roles</span></div>
+        <div class="company-logo-item"><i class="fas fa-users"></i><span>Batch 2025</span></div>
+        <div class="company-logo-item"><i class="fas fa-star"></i><span>100% Placement Rate</span></div>
+        <div class="company-logo-item"><i class="fas fa-plus-circle"></i><span>More Companies Coming Soon</span></div>
+      </div>
+    </div>
+
+    <!-- Placement Stats -->
+    <div class="placement-stats">
+      <div class="p-stat-card fade-in"><span class="big">14</span><div class="label">Students Placed</div></div>
+      <div class="p-stat-card fade-in" style="transition-delay:0.1s"><span class="big">SP Finance</span><div class="label">Hiring Company</div></div>
+      <div class="p-stat-card fade-in" style="transition-delay:0.2s"><span class="big">Dev</span><div class="label">Software Developer Role</div></div>
+      <div class="p-stat-card fade-in" style="transition-delay:0.3s"><span class="big">2025</span><div class="label">Placement Batch</div></div>
+    </div>
+
+    <!-- Placed Students Carousel -->
+    <div class="students-carousel-wrap">
+      <h3 class="students-carousel-title">Our Placed Students — Batch 2025</h3>
+      <div style="overflow:hidden">
+        <div class="students-track" id="studentsTrack">
+          {% for student in placed_students %}
+          <div class="student-card">
+            <div class="student-avatar">{{ student.name|slice:":1" }}</div>
+            <div class="student-name">{{ student.name }}</div>
+            <div class="student-role">{{ student.role }}</div>
+            <div class="student-company"><i class="fas fa-building" style="font-size:0.7rem"></i> {{ student.company }}</div>
+            <span class="placed-badge">✅ Placed</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="studentsPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-btn" id="studentsNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Internship Achievement -->
+    <div class="internship-sub fade-in">
+      <h3>Our Students Build Real Projects &amp; Earn Internship Certificates</h3>
+      <p>Every project you build at TechSpace comes with an official Internship Certificate — signed by our Director.</p>
+      <div class="cert-preview">
+        <div class="cert-shimmer"></div>
+        <div class="cert-seal">🏅</div>
+        <h4>TechSpace — Internship Certificate</h4>
+        <p>Awarded upon completion of a real-world project</p>
+        <p style="margin-top:8px;font-size:0.78rem">Signed by: <strong style="color:rgba(255,255,255,0.7)">Omkar Jagdale</strong> | Founder &amp; Director</p>
+        <p style="font-size:0.72rem;margin-top:4px">🔖 Official TechSpace Seal &amp; Certificate Number</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 6 — LEARNING JOURNEY
+     ═══════════════════════════════════════════════════════════ -->
+<section class="journey-section" id="journey" aria-labelledby="journeyHeading">
+  <div class="container">
+    <h2 class="section-title" id="journeyHeading">Your Learning <span>Journey</span></h2>
+    <p class="section-subtitle">A structured 8-step roadmap from enrollment to placement.</p>
+    <div class="title-underline"></div>
+
+    <div class="journey-steps">
+      <div class="journey-step fade-in"><div class="step-num">1</div><div class="step-title">Enroll in Course</div><div class="step-desc">Choose your course & batch</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.1s"><div class="step-num">2</div><div class="step-title">Attend Live Classes</div><div class="step-desc">Live sessions + recordings</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.2s"><div class="step-num">3</div><div class="step-title">Weekly Practice</div><div class="step-desc">Coding assignments & tasks</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.3s"><div class="step-num">4</div><div class="step-title">Build Projects</div><div class="step-desc">Real-world project work</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.4s"><div class="step-num">5</div><div class="step-title">Internship Cert</div><div class="step-desc">Official project certificate</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.5s"><div class="step-num">6</div><div class="step-title">Resume Building</div><div class="step-desc">Portfolio & ATS resume</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.6s"><div class="step-num">7</div><div class="step-title">Mock Interviews</div><div class="step-desc">Presentation training</div></div>
+      <div class="journey-step fade-in" style="transition-delay:0.7s"><div class="step-num">8</div><div class="step-title">Get Placed 🎉</div><div class="step-desc">Start your tech career!</div></div>
+    </div>
+  </div>
+</section>
+
+    <!-- SECTION: OUR TEAM -->
+<section class="trainers-section" id="team">
+    <div class="container">
+
+        <h2 class="section-title">
+            Meet Our <span>Team</span>
+        </h2>
+
+        <p class="section-subtitle">
+            The leadership team driving innovation, growth and excellence at TechSpace.
+        </p>
+
+        <div class="title-underline"></div>
+
+        <div class="trainers-grid">
+
+            <!-- Omkar -->
+            <div class="trainer-card founder fade-in">
+                <div class="trainer-avatar-placeholder">OJ</div>
+                <div class="trainer-name">Omkar Jagdale</div>
+                <div class="trainer-role">Founder & Director</div>
+
+                <div class="trainer-experience">
+                     Founder and Director who leads the company's overall vision and strategic direction.
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">Leadership</span>
+                    <span class="trainer-tag">Strategy</span>
+                    <span class="trainer-tag">Vision</span>
+                </div>
+            </div>
+
+            <!-- Harsh -->
+            <div class="trainer-card fade-in">
+                <div class="trainer-avatar-placeholder">HS</div>
+                <div class="trainer-name">Harsh Shinde</div>
+                <div class="trainer-role">Managing Director</div>
+
+                <div class="trainer-experience">
+                    Managing Director responsible for overseeing day-to-day operations and business management
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">Management</span>
+                    <span class="trainer-tag">Business</span>
+                    <span class="trainer-tag">Operations</span>
+                </div>
+            </div>
+
+            <!-- Srijan -->
+            <div class="trainer-card fade-in">
+                <div class="trainer-avatar-placeholder">SP</div>
+                <div class="trainer-name">Srijan Pujari</div>
+                <div class="trainer-role">Director - Panvel Branch</div>
+
+                <div class="trainer-experience">
+                    Director of the Panvel Branch who manages branch-specific operations and growth.
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">Growth</span>
+                    <span class="trainer-tag">Operations</span>
+                    <span class="trainer-tag"> Branch Leadership</span>
+                </div>
+            </div>
+
+            <!-- Pratik -->
+            <div class="trainer-card fade-in">
+                <div class="trainer-avatar-placeholder">PY</div>
+                <div class="trainer-name">Pratik Yadav</div>
+                <div class="trainer-role">Mentor & Technical Head</div>
+
+                <div class="trainer-experience">
+                    Mentor and Technical Head who guides technical strategy and mentors the team on technology.
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">Python</span>
+                    <span class="trainer-tag">Architecture</span>
+                    <span class="trainer-tag">Mentorship</span>
+                </div>
+            </div>
+
+            <!-- Sushant -->
+            <div class="trainer-card fade-in">
+                <div class="trainer-avatar-placeholder">SS</div>
+                <div class="trainer-name">Sushant Sawant</div>
+                <div class="trainer-role">Technical Executive</div>
+
+                <div class="trainer-experience">
+                     Technical Executive who implements technical solutions and supports development tasks
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">Development</span>
+                    <span class="trainer-tag">Backend</span>
+                    <span class="trainer-tag">Support</span>
+                </div>
+            </div>
+
+            <!-- Aarti -->
+            <div class="trainer-card fade-in">
+                <div class="trainer-avatar-placeholder">AJ</div>
+                <div class="trainer-name">Aarti Jagtap</div>
+                <div class="trainer-role">HR Executive & Mentor</div>
+
+                <div class="trainer-experience">
+                    HR Executive and Mentor who handles recruitment, employee relations, and provides mentorship to team members.
+                </div>
+
+                <div class="trainer-tags">
+                    <span class="trainer-tag">HR</span>
+                    <span class="trainer-tag">Recruitment</span>
+                    <span class="trainer-tag">Mentorship</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 7 — WHY CHOOSE TECHSPACE
+     ═══════════════════════════════════════════════════════════ -->
+<section class="why-section" id="why" aria-labelledby="whyHeading">
+  <div class="container">
+    <h2 class="section-title" id="whyHeading">Why Choose <span>TechSpace?</span></h2>
+    <p class="section-subtitle">We don't just teach code — we build careers.</p>
+    <div class="title-underline"></div>
+
+    <div class="why-grid">
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-flask"></i></div><h4>80% Practical, 20% Theory</h4><p>Industry-first curriculum where you spend more time building than reading.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-project-diagram"></i></div><h4>Project-Based Curriculum</h4><p>Every module ends with a real project to add to your portfolio.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-certificate"></i></div><h4>Certified Courses</h4><p>Course completion certificate + internship certificate for every student.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-user-friends"></i></div><h4>1:1 Doubt Solving</h4><p>Get direct access to mentors for personal doubt-clearing sessions.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-briefcase"></i></div><h4>Interview Preparation</h4><p>Technical rounds, HR rounds, and presentation training — we cover it all.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-id-card"></i></div><h4>Profile & Resume Building</h4><p>Professional LinkedIn, GitHub profile setup and ATS-optimised resume.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-chalkboard-teacher"></i></div><h4>4+ Expert Trainers</h4><p>Industry professionals with real-world experience guiding every batch.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-handshake"></i></div><h4>Placement Support</h4><p>Company tie-ups, referrals, and job alerts until you get hired.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-rupee-sign"></i></div><h4>Affordable Fees</h4><p>Quality education shouldn't break the bank. EMI options available.</p></div>
+      <div class="why-card fade-in"><div class="why-card-icon"><i class="fas fa-calendar-alt"></i></div><h4>Flexible Batches</h4><p>Morning, Evening & Weekend batches — learn at your own schedule.</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 8: TRAINERS -->
+<section class="trainers-section" id="trainers" aria-labelledby="trainersHeading">
+  <div class="container">
+    <h2 class="section-title" id="trainersHeading">Meet Our <span>Mentors</span></h2>
+    <p class="section-subtitle">Industry professionals who have walked the path and now guide you on yours.</p>
+    <div class="title-underline"></div>
+    <div class="trainers-grid">
+      <div class="trainer-card founder fade-in">
+        <img src="/static/images/omkar.jpg" alt="Omkar Jagdale" class="trainer-avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="trainer-avatar-placeholder" style="display:none">OJ</div>
+        <div class="trainer-name">Omkar Jagdale</div>
+        <div class="trainer-role">Founder &amp; Director</div>
+        <span class="trainer-exp">5+ Years Experience</span>
+        <div class="trainer-tags">
+          <span class="trainer-tag">Python</span>
+          <span class="trainer-tag">Full Stack</span>
+          <span class="trainer-tag">DSA</span>
+          <span class="trainer-tag">Django</span>
+        </div>
+      </div>
+      <div class="trainer-card fade-in" style="transition-delay:0.1s">
+        <div class="trainer-avatar-placeholder">RS</div>
+        <div class="trainer-name">Rahul Sharma</div>
+        <div class="trainer-role">Web Development Expert</div>
+        <span class="trainer-exp">4+ Years Experience</span>
+        <div class="trainer-tags">
+          <span class="trainer-tag">React</span>
+          <span class="trainer-tag">Node.js</span>
+          <span class="trainer-tag">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="trainer-card fade-in" style="transition-delay:0.2s">
+        <div class="trainer-avatar-placeholder">PD</div>
+        <div class="trainer-name">Priya Desai</div>
+        <div class="trainer-role">Data Science &amp; Analytics</div>
+        <span class="trainer-exp">4+ Years Experience</span>
+        <div class="trainer-tags">
+          <span class="trainer-tag">Python</span>
+          <span class="trainer-tag">ML</span>
+          <span class="trainer-tag">Pandas</span>
+        </div>
+      </div>
+      <div class="trainer-card fade-in" style="transition-delay:0.3s">
+        <div class="trainer-avatar-placeholder">AK</div>
+        <div class="trainer-name">Arjun Kulkarni</div>
+        <div class="trainer-role">Cloud &amp; DevOps Engineer</div>
+        <span class="trainer-exp">5+ Years Experience</span>
+        <div class="trainer-tags">
+          <span class="trainer-tag">AWS</span>
+          <span class="trainer-tag">Docker</span>
+          <span class="trainer-tag">CI/CD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9: TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials" aria-labelledby="testiHeading">
+  <div class="container">
+    <h2 class="section-title" id="testiHeading">Student <span>Reviews</span></h2>
+    <p class="section-subtitle">Real stories from students who transformed their careers with TechSpace.</p>
+    <div class="title-underline"></div>
+    <div class="testimonials-carousel">
+      <div class="testimonials-track" id="testimonialsTrack">
+        {% for t in testimonials %}
+        <div class="testimonial-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"{{ t.review }}"</p>
+          <div class="testi-author">
+            <div class="testi-initials">{{ t.name|slice:":1" }}</div>
+            <div><div class="testi-name">{{ t.name }}</div><div class="testi-course">{{ t.course }}</div></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="carousel-controls" style="margin-top:24px">
+      <button class="carousel-btn" id="testiPrev" aria-label="Previous review"><i class="fas fa-chevron-left"></i></button>
+      <button class="carousel-btn" id="testiNext" aria-label="Next review"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="google-rating-bar fade-in" style="margin-top:40px">
+      <div><div class="rating-big">4.8</div><div class="stars">★★★★★</div><div class="count">50+ Google Reviews</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding-left:20px;border-left:1px solid #e2e8f0">
+        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" style="height:24px;object-fit:contain">
+        <div style="font-size:0.8rem;color:var(--grey)">Rated on<br><strong style="color:var(--navy)">Google Maps</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 10: CERTIFICATES SHOWCASE -->
+<section class="certs-section" id="certificates" aria-labelledby="certsHeading">
+  <div class="container">
+    <h2 class="section-title" id="certsHeading">Certificates We <span>Award</span></h2>
+    <p class="section-subtitle">Earn a certificate after every course &amp; project you complete at TechSpace.</p>
+    <div class="title-underline"></div>
+    <div class="certs-grid">
+      <div class="cert-card fade-in">
+        <div class="cert-shimmer"></div>
+        <div class="gold-seal">🏆</div>
+        <div class="cert-type">Course Completion Certificate</div>
+        <div class="cert-title-main">Python Programming</div>
+        <div class="cert-meta">
+          <span>Issued to: <strong style="color:rgba(255,255,255,0.8)">Harshvardhan Anil Shinde</strong></span>
+          <span>Date: 28 October 2025</span>
+          <span>Cert No: TS-PY-2025-000105-Q9C</span>
+          <span style="margin-top:8px">Signed by Omkar Jagdale | Founder &amp; Director</span>
+        </div>
+      </div>
+      <div class="cert-card fade-in" style="transition-delay:0.15s">
+        <div class="cert-shimmer"></div>
+        <div class="gold-seal">🎖️</div>
+        <div class="cert-type">Project Completion Certificate</div>
+        <div class="cert-title-main">Tipper Project</div>
+        <div class="cert-meta">
+          <span>Under guidance of: <strong style="color:rgba(255,255,255,0.8)">Mr. Omkar Jagdale</strong></span>
+          <span>Real-world project successfully completed</span>
+          <span style="margin-top:8px">TechSpace Programming Classes</span>
+          <span>Official Seal &amp; Signature</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 11: BRANCHES -->
+<section class="branches-section" id="branches" aria-labelledby="branchesHeading">
+  <div class="container">
+    <h2 class="section-title" id="branchesHeading">Our <span>Branches</span></h2>
+    <p class="section-subtitle">3 conveniently located branches across Navi Mumbai.</p>
+    <div class="title-underline"></div>
+    <div class="branch-tabs" role="tablist">
+      <button class="branch-tab active" data-branch="kalamboli" role="tab" aria-selected="true" id="tab-kalamboli">📍 Kalamboli</button>
+      <button class="branch-tab" data-branch="kamothe" role="tab" aria-selected="false" id="tab-kamothe">📍 Kamothe</button>
+      <button class="branch-tab" data-branch="panvel" role="tab" aria-selected="false" id="tab-panvel">📍 Panvel</button>
+    </div>
+    <!-- Kalamboli -->
+    <div class="branch-panel active" id="branch-kalamboli" role="tabpanel">
+      <div class="branch-info">
+        <h3>Kalamboli Branch</h3>
+        <div class="branch-address">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>Asthavinayak Building, KL 5, Building No 1, Room No 9,<br>Sector 2, Kalamboli, Navi Mumbai – 410218</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+          <a href="https://maps.app.goo.gl/CSeoa3tU26mALGry7" target="_blank" rel="noopener" class="btn btn-primary btn-sm"><i class="fas fa-directions"></i> Get Directions</a>
+          <a href="tel:+919321674997" class="btn btn-secondary btn-sm"><i class="fas fa-phone-alt"></i> Call Branch</a>
+        </div>
+        <div class="branch-photos">
+          <div class="branch-photo-slot"><i class="fas fa-chalkboard-teacher" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>Classroom</div>
+          <div class="branch-photo-slot"><i class="fas fa-desktop" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>Lab</div>
+          <div class="branch-photo-slot"><i class="fas fa-door-open" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>Reception</div>
+        </div>
+      </div>
+      <div>
+        <div class="branch-map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.0!2d73.095!3d18.994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTechSpace+Programming+Classes%2C+Kalamboli!5e0!3m2!1sen!2sin!4v1620000000000" allowfullscreen="" loading="lazy" title="Kalamboli Branch Location"></iframe>
+        </div>
+      </div>
+    </div>
+     
+   
+    <!-- Kamothe -->
+<div class="branch-panel" id="branch-kamothe" role="tabpanel">
+  <div class="branch-info">
+    <h3>Kamothe Branch</h3>
+
+    <div class="branch-address">
+      <i class="fas fa-map-marker-alt"></i>
+      <div>
+        Shop No. 1, Om Sai Darshan CHS,<br>
+        Near Copper Kadai Hotel,<br>
+        Sector 34, Plot No. 144-145,<br>
+        Kamothe, Navi Mumbai – 410209
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+      <a href="https://maps.app.goo.gl/4VHTJgBDBptpj6DFA"
+         target="_blank"
+         rel="noopener"
+         class="btn btn-primary btn-sm">
+        <i class="fas fa-directions"></i> Get Directions
+      </a>
+
+      <a href="tel:+919321674997"
+         class="btn btn-secondary btn-sm">
+        <i class="fas fa-phone-alt"></i> Call Branch
+      </a>
+    </div>
+
+    <div class="branch-photos">
+      <div class="branch-photo-slot">
+        <i class="fas fa-chalkboard-teacher"
+           style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Classroom
+      </div>
+
+      <div class="branch-photo-slot">
+        <i class="fas fa-desktop"
+           style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Lab
+      </div>
+
+      <div class="branch-photo-slot">
+        <i class="fas fa-door-open"
+           style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Reception
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="branch-map">
+      <iframe
+        src="https://www.google.com/maps?q=Shop+No+1+Om+Sai+Darshan+CHS+Near+Copper+Kadai+Hotel+Sector+34+Plot+144-145+Kamothe+Navi+Mumbai+410209&output=embed"
+        allowfullscreen=""
+        loading="lazy"
+        title="Kamothe Branch Location">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+    <!-- Panvel -->
+    <div class="branch-panel" id="branch-panvel" role="tabpanel">
+  <div class="branch-info">
+    <h3>Panvel Branch</h3>
+    <div class="branch-address">
+      <i class="fas fa-map-marker-alt"></i>
+      <div>
+        Shivshambo Apartment, Room No. 02,<br>
+        Near Gram Panchayat Office,<br>
+        Vichumbe, Panvel – 410206
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+      <a href="https://maps.app.goo.gl/ks75pJmyi7hiRmuv6" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+        <i class="fas fa-directions"></i> Get Directions
+      </a>
+
+      <a href="tel:+919321674997" class="btn btn-secondary btn-sm">
+        <i class="fas fa-phone-alt"></i> Call Branch
+      </a>
+    </div>
+
+    <div class="branch-photos">
+      <div class="branch-photo-slot">
+        <i class="fas fa-chalkboard-teacher" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Classroom
+      </div>
+
+      <div class="branch-photo-slot">
+        <i class="fas fa-desktop" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Lab
+      </div>
+
+      <div class="branch-photo-slot">
+        <i class="fas fa-door-open" style="font-size:1.5rem;display:block;margin-bottom:4px;color:var(--blue)"></i>
+        Reception
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="branch-map">
+      <iframe
+        src="https://www.google.com/maps?q=Shivshambo+Apartment+Vichumbe+Panvel+410206&output=embed"
+        allowfullscreen=""
+        loading="lazy"
+        title="Panvel Branch Location">
+      </iframe>
+    </div>
+  </div>
+</div>
+  </div>
+</section>
+
+<!-- SECTION 12: FAQ -->
+<section class="faq-section" id="faq" aria-labelledby="faqHeading">
+  <div class="container">
+    <h2 class="section-title" id="faqHeading">Frequently Asked <span>Questions</span></h2>
+    <p class="section-subtitle">Everything you need to know before joining TechSpace.</p>
+    <div class="title-underline"></div>
+    <div class="faq-list">
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">What courses does TechSpace offer? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">TechSpace offers Python Programming, Full Stack Web Development, Data Science &amp; Analytics, DevOps Engineering, Cloud Computing, Cyber Security, DSA + Competitive Programming, Software Development, Git &amp; Version Control, System Architecture, and Development Tools &amp; IDEs.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Do you offer online and offline classes? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes! We offer both classroom (offline) training at our Kalamboli, Kamothe, and Panvel branches, as well as online live sessions with recorded lecture access. You can choose either mode or even hybrid learning.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Will I get a certificate after completing the course? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Absolutely! You receive a Course Completion Certificate after finishing the course and an Internship Certificate after completing your project work. Both are officially signed by our Founder &amp; Director, Omkar Jagdale.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Do you help with placement after the course? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes! TechSpace provides 100% placement support including resume building, mock interviews, presentation training, and direct company referrals. Our 2025 batch achieved 100% placement — 14 students were placed at SP Finance as Software Developers.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">What is the course duration? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Course durations vary. Short modules like Git &amp; Version Control take 3–4 weeks, while comprehensive programs like Full Stack Web Development can take 4–6 months. The average duration is 3–6 months.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Are there EMI or installment options? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes, we understand that quality education should be affordable. We offer flexible payment plans and EMI options. Contact us at +91 93216 74997 or visit any branch to discuss fee and payment structure.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">What if I miss a class? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No worries! All live sessions are recorded. You'll have access to the recorded lectures so you can catch up at your own pace. Our mentors are also available for 1:1 doubt-clearing sessions.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Is prior coding knowledge required? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Not at all! Most of our courses are designed from scratch. Whether you're a complete beginner or have some experience, we have courses suited for all levels. Our trainers will guide you step by step.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">Do you offer internship opportunities? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes! Every student works on real-world projects under the guidance of our mentors and receives an official Internship Certificate upon completion. This gives you hands-on industry experience to add to your resume.</div></div>
+      </div>
+      <div class="faq-item fade-in">
+        <button class="faq-question" aria-expanded="false">How do I enroll? <span class="faq-icon"><i class="fas fa-plus"></i></span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">You can enroll by: 1) Filling the form on this page, 2) Calling/WhatsApp at +91 93216 74997, 3) Visiting our Kalamboli branch directly. Our counsellor will guide you through course selection and batch scheduling.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 13: CONTACT -->
+<section class="contact-section" id="contact" aria-labelledby="contactHeading">
+  <div class="container">
+    <h2 class="section-title" id="contactHeading">Start Your <span>Coding Journey</span></h2>
+    <p class="section-subtitle">Get in touch — our counsellors respond within 24 hours.</p>
+    <div class="title-underline"></div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info-cards">
+          <div class="contact-card"><div class="contact-card-icon"><i class="fas fa-phone-alt"></i></div><div class="contact-card-text"><h4>Call / WhatsApp</h4><a href="tel:+919321674997">+91 93216 74997</a></div></div>
+          <div class="contact-card"><div class="contact-card-icon"><i class="fas fa-envelope"></i></div><div class="contact-card-text"><h4>Email Us</h4><a href="mailto:omkarcoder18@gmail.com">omkarcoder18@gmail.com</a><br><a href="mailto:omkarcode18@gmail.com" style="font-size:0.78rem">omkarcode18@gmail.com</a></div></div>
+          <div class="contact-card"><div class="contact-card-icon"><i class="fas fa-map-marker-alt"></i></div><div class="contact-card-text"><h4>Kalamboli Branch</h4><p>Asthavinayak Building, KL 5, Building No 1, Room No 9, Sector 2, Kalamboli, Navi Mumbai – 410218</p></div></div>
+          <div class="contact-card"><div class="contact-card-icon" style="background:linear-gradient(135deg,#25d366,#128c7e)"><i class="fab fa-whatsapp"></i></div><div class="contact-card-text"><h4>WhatsApp</h4><a href="https://wa.me/919321674997?text=Hi%20TechSpace!%20I%20want%20to%20know%20more." target="_blank">Chat with us now →</a></div></div>
+        </div>
+        <div class="contact-map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.0!2d73.095!3d18.994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTechSpace+Kalamboli!5e0!3m2!1sen!2sin!4v1620000000000" allowfullscreen="" loading="lazy" title="TechSpace Kalamboli Location"></iframe>
+        </div>
+      </div>
+      <div class="contact-form-wrap">
+        <h3>Send Us a Message</h3>
+        <p>Fill in the details below — we'll call you back &amp; schedule a free demo class.</p>
+        <form method="post" action="/enquire/" class="form-light" id="contactForm">
+          {% csrf_token %}
+          <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Full Name *</label><input class="form-control" type="text" name="name" placeholder="Your Full Name" required id="contactName"></div>
+          <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Mobile Number *</label><input class="form-control" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required id="contactPhone"></div>
+          <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Email</label><input class="form-control" type="email" name="email" placeholder="Email Address" id="contactEmail"></div>
+          <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Course Interest</label>
+            <select class="form-select" name="course" id="contactCourse">
+              <option value="other">Select a Course</option>
+              <option value="python">Python Programming</option>
+              <option value="fullstack">Full Stack Web Development</option>
+              <option value="data-science">Data Science &amp; Analytics</option>
+              <option value="devops">DevOps Engineering</option>
+              <option value="cloud-computing">Cloud Computing</option>
+              <option value="cyber-security">Cyber Security</option>
+              <option value="dsa">DSA + Competitive Programming</option>
+              <option value="software-development">Software Development</option>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Preferred Branch</label>
+              <select class="form-select" name="branch" id="contactBranch">
+                <option value="kalamboli">Kalamboli</option>
+                <option value="kamothe">Kamothe</option>
+                <option value="panvel">Panvel</option>
+                <option value="any">Any</option>
+              </select>
+            </div>
+            <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Mode</label>
+              <select class="form-select" name="mode" id="contactMode">
+                <option value="offline">Offline</option>
+                <option value="online">Online</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label style="color:var(--navy);font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px">Message</label><textarea class="form-control" name="message" rows="3" placeholder="Any specific requirement or question..." id="contactMessage"></textarea></div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center" id="contactSubmitBtn"><i class="fas fa-paper-plane"></i> Send Enquiry</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
