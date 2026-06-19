@@ -16,6 +16,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '.vercel.app',
     'techspace-indol.vercel.app',
+    'https://techspaceprogramming.com',
+    'https://www.techspaceprogramming.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
