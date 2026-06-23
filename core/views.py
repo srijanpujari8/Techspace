@@ -9,8 +9,12 @@ from django.conf import settings
 
 from .models import PlacedStudent, Course, Testimonial, Enquiry, BrochureLead
 from .forms import EnquiryForm, BrochureLeadForm
-from .firebase import db
 from datetime import datetime
+
+try:
+    from .firebase import db
+except Exception:
+    db = None
 
 
 # ─── Static data for placed students ──────────────────────────────────────────
@@ -97,32 +101,29 @@ def submit_enquiry(request):
         try:
             enquiry = form.save()
         except Exception as e:
-            return JsonResponse({
-                "error": str(e)
-            })
+            return JsonResponse({"error": str(e)})
 
-        # 🔥 FIREBASE ADD HERE (IMPORTANT)
-        try:
-            db.collection("enquiries").document(str(enquiry.id)).set(
-    {
-        "name": enquiry.name,
-        "email": enquiry.email,
-        "phone": enquiry.phone,
-        "course": enquiry.get_course_display(),
-        "created_at": datetime.now().isoformat()
-    }
-)
+        # 🔥 FIREBASE SAVE (SAFE)
+        if db:
+            try:
+                db.collection("enquiries").document(str(enquiry.id)).set({
+                    "name": enquiry.name,
+                    "email": enquiry.email,
+                    "phone": enquiry.phone,
+                    "course": enquiry.get_course_display(),
+                    "created_at": datetime.now().isoformat()
+                })
+            except Exception as e:
+                print("Firebase write failed:", e)
 
-
-        except Exception as e:
-            print("Firebase error:", e)
-
-        # Send confirmation email (existing code)
+        # 📧 SEND EMAIL
         try:
             send_mail(
                 subject='Thanks for your enquiry — TechSpace Programming Classes',
                 message=f"""Hi {enquiry.name},
+
 Thank you for your interest in TechSpace Programming Classes!
+
 
 We have received your enquiry for: {enquiry.get_course_display()}
 Our team will contact you shortly on: {enquiry.phone}
