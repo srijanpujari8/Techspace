@@ -1,10 +1,3 @@
-import os
-import json
-import firebase_admin
-from firebase_admin import credentials, firestore
-
-db = None
-
 if not firebase_admin._apps:
     try:
         cred_dict = {
@@ -19,11 +12,15 @@ if not firebase_admin._apps:
             "auth_provider_x509_cert_url": os.environ.get("FIREBASE_CLIENT_X509_CERT_URL"),
         }
 
-        # safety check (important)
+        print("DEBUG:", {k: bool(v) for k, v in cred_dict.items()})  # ← ADD THIS
+
         if cred_dict["private_key"] and cred_dict["client_email"]:
             cred = credentials.Certificate(cred_dict)
             firebase_admin.initialize_app(cred)
             db = firestore.client()
+            print("✅ Firebase SUCCESS")  # ← ADD THIS
+        else:
+            print("❌ Firebase FAILED - missing keys")  # ← ADD THIS
 
     except Exception as e:
-        print("Firebase init failed:", e)
+        print("Firebase init failed:", e)  # Already there
