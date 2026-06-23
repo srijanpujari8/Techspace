@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key')
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = False  # Set to False for production
 
 ALLOWED_HOSTS = [
     'localhost',

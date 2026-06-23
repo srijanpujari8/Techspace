@@ -93,34 +93,32 @@ def home(request):
 
 
 @require_POST
+    
 def submit_enquiry(request):
-    """Handle enquiry form POST → save to DB → confirmation email → redirect."""
+    """Handle enquiry form POST → save to Firebase → email → redirect"""
+
     form = EnquiryForm(request.POST)
 
     if form.is_valid():
+        data = form.cleaned_data
+
+        # 🔥 FIREBASE SAVE
         try:
-            enquiry = form.save()
+            db.collection("enquiries").add({
+                "name": data["name"],
+                "email": data["email"],
+                "phone": data["phone"],
+                "course": data["course"],
+                "created_at": datetime.now().isoformat()
+            })
         except Exception as e:
-            return JsonResponse({"error": str(e)})
+            print("Firebase error:", e)
 
-        # 🔥 FIREBASE SAVE (SAFE)
-        if db:
-            try:
-                db.collection("enquiries").document(str(enquiry.id)).set({
-                    "name": enquiry.name,
-                    "email": enquiry.email,
-                    "phone": enquiry.phone,
-                    "course": enquiry.get_course_display(),
-                    "created_at": datetime.now().isoformat()
-                })
-            except Exception as e:
-                print("Firebase write failed:", e)
-
-        # 📧 SEND EMAIL
+        # 📧 EMAIL
         try:
             send_mail(
                 subject='Thanks for your enquiry — TechSpace Programming Classes',
-                message=f"""Hi {enquiry.name},
+                message=f"""Hi {data['name']},
 
 Thank you for your interest in TechSpace Programming Classes!
 
