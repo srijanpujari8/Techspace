@@ -82,14 +82,20 @@ def home(request):
 def submit_enquiry(request):
     """Handle enquiry form POST → save to DB → confirmation email → redirect."""
     form = EnquiryForm(request.POST)
+
     if form.is_valid():
-        enquiry = form.save()
+        try:
+            enquiry = form.save()
+        except Exception as e:
+            return JsonResponse({
+                "error": str(e)
+            })
+
         # Send confirmation email (non-blocking, fails silently in dev)
         try:
             send_mail(
                 subject='Thanks for your enquiry — TechSpace Programming Classes',
                 message=f"""Hi {enquiry.name},
-
 Thank you for your interest in TechSpace Programming Classes!
 
 We have received your enquiry for: {enquiry.get_course_display()}
