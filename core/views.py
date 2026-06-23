@@ -13,7 +13,8 @@ from datetime import datetime
 
 try:
     from .firebase import db
-except Exception:
+except Exception as e:
+    print("Firebase import failed:", e)  # ← ADD
     db = None
 
 
