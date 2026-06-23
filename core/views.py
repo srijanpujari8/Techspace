@@ -14,11 +14,9 @@ from datetime import datetime
 try:
     from .firebase import db
 except Exception as e:
-    print("Firebase import failed:", e)  # ← ADD
+    print("Firebase import failed:", e)
     db = None
 
-
-# ─── Static data for placed students ──────────────────────────────────────────
 PLACED_STUDENTS = [
     {'name': 'Vasudha Rathore',    'role': 'Software Developer', 'company': 'SP Finance', 'batch': '2025'},
     {'name': 'Vaishnavi Kumbhar',  'role': 'Software Developer', 'company': 'SP Finance', 'batch': '2025'},
@@ -63,25 +61,16 @@ STATIC_TESTIMONIALS = [
 
 
 def home(request):
-    """Render the main homepage with all sections."""
-
     try:
-        placed_students_db = list(
-            PlacedStudent.objects.filter(is_active=True).values()
-        )
-        testimonials_db = list(
-            Testimonial.objects.filter(is_active=True).values()
-        )
-
+        placed_students_db = list(PlacedStudent.objects.filter(is_active=True).values())
+        testimonials_db = list(Testimonial.objects.filter(is_active=True).values())
         placed_students = placed_students_db if placed_students_db else PLACED_STUDENTS
         testimonials = testimonials_db if testimonials_db else STATIC_TESTIMONIALS
-
     except Exception:
         placed_students = PLACED_STUDENTS
         testimonials = STATIC_TESTIMONIALS
 
     form = EnquiryForm()
-
     context = {
         'form': form,
         'placed_students': placed_students,
@@ -89,21 +78,20 @@ def home(request):
         'testimonials': testimonials,
         'placed_count': len(placed_students),
     }
-
     return render(request, 'index.html', context)
 
 
 @require_POST
 def submit_enquiry(request):
-    """Handle enquiry form POST → save to Firebase → email → redirect"""
-
     form = EnquiryForm(request.POST)
-
     if form.is_valid():
         data = form.cleaned_data
 
         # 🔥 FIREBASE SAVE
         try:
+            if db is None:
+                messages.error(request, 'DEBUG: db is None - Firebase not initialized')
+                return redirect('home')
             db.collection("enquiries").add({
                 "name": data["name"],
                 "email": data["email"],
@@ -112,7 +100,8 @@ def submit_enquiry(request):
                 "created_at": datetime.now().isoformat()
             })
         except Exception as e:
-            print("Firebase error:", e)
+            messages.error(request, f'DEBUG Firebase error: {str(e)}')
+            return redirect('home')
 
         # 📧 EMAIL
         try:
@@ -157,17 +146,12 @@ Founder & Director — TechSpace Programming Classes
 
 @require_POST
 def download_brochure(request):
-    """Gate brochure download with name + phone."""
     form = BrochureLeadForm(request.POST)
     if form.is_valid():
         form.save()
         brochure_path = os.path.join(settings.MEDIA_ROOT, 'brochure', 'techspace_brochure.pdf')
         if os.path.exists(brochure_path):
-            return FileResponse(
-                open(brochure_path, 'rb'),
-                as_attachment=True,
-                filename='TechSpace_Brochure.pdf'
-            )
+            return FileResponse(open(brochure_path, 'rb'), as_attachment=True, filename='TechSpace_Brochure.pdf')
         messages.warning(request, 'Brochure will be available soon. We\'ll WhatsApp it to you!')
         return redirect('home')
     messages.error(request, 'Please enter your name and mobile number.')
@@ -175,11 +159,9 @@ def download_brochure(request):
 
 
 def success(request):
-    """Thank you page after enquiry submission."""
     return render(request, 'success.html')
 
 
 def courses_api(request):
-    """JSON API for active courses."""
     data = STATIC_COURSES
     return JsonResponse({'courses': data, 'total': len(data)})
