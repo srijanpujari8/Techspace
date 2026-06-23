@@ -83,9 +83,9 @@ def home(request):
 
     context = {
         'form': form,
-        'placed_students': placed_students,   # ✅ FIX
+        'placed_students': placed_students,
         'courses': STATIC_COURSES,
-        'testimonials': testimonials,          # ✅ FIX
+        'testimonials': testimonials,
         'placed_count': len(placed_students),
     }
 
@@ -93,7 +93,6 @@ def home(request):
 
 
 @require_POST
-    
 def submit_enquiry(request):
     """Handle enquiry form POST → save to Firebase → email → redirect"""
 
@@ -122,9 +121,8 @@ def submit_enquiry(request):
 
 Thank you for your interest in TechSpace Programming Classes!
 
-
-We have received your enquiry for: {enquiry.get_course_display()}
-Our team will contact you shortly on: {enquiry.phone}
+We have received your enquiry for: {data['course']}
+Our team will contact you shortly on: {data['phone']}
 
 📍 Visit us at: Asthavinayak Building, KL 5, Sector 2, Kalamboli, Navi Mumbai – 410218
 📞 Call/WhatsApp: +91 93216 74997
@@ -135,12 +133,13 @@ Omkar Jagdale
 Founder & Director — TechSpace Programming Classes
 """,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[enquiry.email] if enquiry.email else [],
+                recipient_list=[data['email']],
                 fail_silently=True,
             )
         except Exception:
             pass
-        messages.success(request, f"Thank you {enquiry.name}! We'll call you within 24 hours.")
+
+        messages.success(request, f"Thank you {data['name']}! We'll call you within 24 hours.")
         return redirect('success')
     else:
         messages.error(request, 'Please correct the errors below.')
