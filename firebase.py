@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 db = None
+firebase_error = None
 
 try:
     if not firebase_admin._apps:
@@ -20,4 +21,5 @@ try:
         firebase_admin.initialize_app(cred)
         db = firestore.client()
 except Exception as e:
+    firebase_error = str(e)
     print(f"Firebase failed: {e}")
