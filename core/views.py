@@ -9,6 +9,8 @@ from django.conf import settings
 
 from .models import PlacedStudent, Course, Testimonial, Enquiry, BrochureLead
 from .forms import EnquiryForm, BrochureLeadForm
+from .firebase import db
+from datetime import datetime
 
 
 # ─── Static data for placed students ──────────────────────────────────────────
@@ -57,24 +59,32 @@ STATIC_TESTIMONIALS = [
 
 def home(request):
     """Render the main homepage with all sections."""
-    # Try DB first, fall back to static data
+
     try:
-        placed_students_db = list(PlacedStudent.objects.filter(is_active=True).values())
+        placed_students_db = list(
+            PlacedStudent.objects.filter(is_active=True).values()
+        )
+        testimonials_db = list(
+            Testimonial.objects.filter(is_active=True).values()
+        )
+
         placed_students = placed_students_db if placed_students_db else PLACED_STUDENTS
-        testimonials_db = list(Testimonial.objects.filter(is_active=True).values())
         testimonials = testimonials_db if testimonials_db else STATIC_TESTIMONIALS
+
     except Exception:
         placed_students = PLACED_STUDENTS
         testimonials = STATIC_TESTIMONIALS
 
     form = EnquiryForm()
+
     context = {
         'form': form,
-        'placed_students': PLACED_STUDENTS,  # Always use static for accuracy
+        'placed_students': placed_students,   # ✅ FIX
         'courses': STATIC_COURSES,
-        'testimonials': STATIC_TESTIMONIALS,
-        'placed_count': len(PLACED_STUDENTS),
+        'testimonials': testimonials,          # ✅ FIX
+        'placed_count': len(placed_students),
     }
+
     return render(request, 'index.html', context)
 
 
@@ -91,7 +101,23 @@ def submit_enquiry(request):
                 "error": str(e)
             })
 
-        # Send confirmation email (non-blocking, fails silently in dev)
+        # 🔥 FIREBASE ADD HERE (IMPORTANT)
+        try:
+            db.collection("enquiries").document(str(enquiry.id)).set(
+    {
+        "name": enquiry.name,
+        "email": enquiry.email,
+        "phone": enquiry.phone,
+        "course": enquiry.get_course_display(),
+        "created_at": datetime.now().isoformat()
+    }
+)
+
+
+        except Exception as e:
+            print("Firebase error:", e)
+
+        # Send confirmation email (existing code)
         try:
             send_mail(
                 subject='Thanks for your enquiry — TechSpace Programming Classes',

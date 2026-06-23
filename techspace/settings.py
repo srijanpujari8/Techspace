@@ -9,15 +9,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key')
 
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.vercel.app',
     'techspace-indol.vercel.app',
-    'techspaceprogramming.com',        # ✅ bina https:// ke
-    'www.techspaceprogramming.com',    # ✅ bina https:// ke
+    'techspaceprogramming.com',
+    'www.techspaceprogramming.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
