@@ -144,7 +144,18 @@ Founder & Director — TechSpace Programming Classes
 def download_brochure(request):
     form = BrochureLeadForm(request.POST)
     if form.is_valid():
-        form.save()
+        try:
+            if db is not None:
+                data = form.cleaned_data
+                db.collection("brochure_leads").add({
+                    "name": data["name"],
+                    "phone": data["phone"],
+                    "email": data.get("email", ""),
+                    "downloaded_at": datetime.now().isoformat()
+                })
+        except Exception as e:
+            print(f"Firebase error: {e}")
+
         brochure_path = os.path.join(settings.MEDIA_ROOT, 'brochure', 'techspace_brochure.pdf')
         if os.path.exists(brochure_path):
             return FileResponse(open(brochure_path, 'rb'), as_attachment=True, filename='TechSpace_Brochure.pdf')
