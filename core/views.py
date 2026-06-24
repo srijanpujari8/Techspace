@@ -10,12 +10,8 @@ from django.conf import settings
 from .models import PlacedStudent, Course, Testimonial, Enquiry, BrochureLead
 from .forms import EnquiryForm, BrochureLeadForm
 from datetime import datetime
+from .firebase import db
 
-try:
-    from .firebase import db
-except Exception as e:
-    print("Firebase import failed:", e)
-    db = None
 
 PLACED_STUDENTS = [
     {'name': 'Vasudha Rathore',    'role': 'Software Developer', 'company': 'SP Finance', 'batch': '2025'},
@@ -81,6 +77,7 @@ def home(request):
     return render(request, 'index.html', context)
 
 
+
 @require_POST
 def submit_enquiry(request):
     form = EnquiryForm(request.POST)
@@ -101,7 +98,7 @@ def submit_enquiry(request):
             })
         except Exception as e:
             messages.error(request, f'DEBUG Firebase error: {str(e)}')
-            return redirect('home')
+            return redirect('home')   
 
         # 📧 EMAIL
         try:
