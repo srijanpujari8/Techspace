@@ -9,6 +9,10 @@ firebase_error = None
 try:
     if not firebase_admin._apps:
         cred_json = os.environ.get("FIREBASE_CREDENTIALS")
+        
+        if not cred_json:
+            raise Exception("FIREBASE_CREDENTIALS env variable not found!")
+            
         cred = credentials.Certificate(json.loads(cred_json))
         firebase_admin.initialize_app(cred)
         db = firestore.client()

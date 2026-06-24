@@ -10,7 +10,7 @@ from django.conf import settings
 from .models import PlacedStudent, Course, Testimonial, Enquiry, BrochureLead
 from .forms import EnquiryForm, BrochureLeadForm
 from datetime import datetime
-from .firebase import db
+from .firebase import db, firebase_error  # firebase_error bhi import karo
 
 
 PLACED_STUDENTS = [
@@ -87,7 +87,7 @@ def submit_enquiry(request):
         # 🔥 FIREBASE SAVE
         try:
             if db is None:
-                messages.error(request, 'DEBUG: db is None - Firebase not initialized')
+                messages.error(request, f'Firebase Error: {firebase_error}')
                 return redirect('home')
             db.collection("enquiries").add({
                 "name": data["name"],
@@ -98,14 +98,13 @@ def submit_enquiry(request):
             })
         except Exception as e:
             messages.error(request, f'DEBUG Firebase error: {str(e)}')
-            return redirect('home')   
+            return redirect('home')
 
         # 📧 EMAIL
         try:
             send_mail(
                 subject='Thanks for your enquiry — TechSpace Programming Classes',
                 message=f"""Hi {data['name']},
-
 Thank you for your interest in TechSpace Programming Classes!
 
 We have received your enquiry for: {data['course']}
